@@ -1,0 +1,13 @@
+{
+  "name": "agentarium-local-orchestrator",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Minimal local multi-agent orchestrator for Ollama/OpenAI-compatible endpoints",
+  "bin": {
+    "agentarium": "./main.mjs"
+  },
+  "scripts": {
+    "start": "node ./main.mjs"
+  }
+}

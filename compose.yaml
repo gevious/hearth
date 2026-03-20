@@ -1,0 +1,29 @@
+services:
+  agentarium-local:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ${CONTAINER_NAME:-agentarium-local}
+    hostname: ${CONTAINER_NAME:-agentarium-local}
+    restart: unless-stopped
+    environment:
+      TZ: ${TZ:-UTC}
+      SSH_PASSWORD: ${SSH_PASSWORD:-codex}
+      LOCAL_MODEL: ${LOCAL_MODEL:-qwen3-coder:30b}
+      AUTO_PULL_MODEL: ${AUTO_PULL_MODEL:-true}
+      AUTO_INSTALL_QWEN_CODE: ${AUTO_INSTALL_QWEN_CODE:-false}
+    ports:
+      - "${SSH_PORT:-2222}:22"
+      - "${OLLAMA_PORT:-11434}:11434"
+    volumes:
+      - ./workspace:/workspace
+      - ./data/ollama:/root/.ollama
+      - ./data/home-codex:/home/codex
+    healthcheck:
+      test: ["CMD-SHELL", "pgrep -x sshd >/dev/null && curl -fsS http://127.0.0.1:11434/api/tags >/dev/null"]
+      interval: 15s
+      timeout: 5s
+      retries: 20
+      start_period: 40s
+    # Uncomment if you have NVIDIA Container Toolkit configured and want GPU acceleration.
+    # gpus: all
